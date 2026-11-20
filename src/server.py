@@ -11,10 +11,11 @@ from src.linear_probing import LinearProbingHashTable
 from src.shortener import Shortener
 
 MAX_FORM_BYTES = 1_000_000
+SERVER_TABLE_CAPACITY = 64
 DEMO_URLS = (
-    "https://example.com/a",
-    "https://example.com/i",
-    "https://example.com/q",
+    "https://example.com/demo-by",
+    "https://example.com/demo-kb",
+    "https://example.com/demo-md",
 )
 
 
@@ -222,7 +223,9 @@ def main() -> None:
     table_class = (
         LinearProbingHashTable if args.strategy == "linear" else HashTable
     )
-    shortener = Shortener(table_class=table_class)
+    shortener = Shortener(
+        table_class=partial(table_class, capacity=SERVER_TABLE_CAPACITY)
+    )
     _seed_demo_data(shortener)
     handler = partial(ShortenerHandler, shortener=shortener)
     with ThreadingHTTPServer(("", args.port), handler) as server:

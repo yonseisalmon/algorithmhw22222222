@@ -7,7 +7,12 @@ from urllib.parse import urlencode
 
 from src.hash_table import HashTable
 from src.linear_probing import LinearProbingHashTable
-from src.server import DEMO_URLS, ShortenerHandler, _seed_demo_data
+from src.server import (
+    DEMO_URLS,
+    SERVER_TABLE_CAPACITY,
+    ShortenerHandler,
+    _seed_demo_data,
+)
 from src.shortener import Shortener
 
 
@@ -15,7 +20,11 @@ class ServerTests(unittest.TestCase):
     table_class = HashTable
 
     def setUp(self):
-        shortener = Shortener(table_class=self.table_class)
+        shortener = Shortener(
+            table_class=partial(
+                self.table_class, capacity=SERVER_TABLE_CAPACITY
+            )
+        )
         handler = partial(ShortenerHandler, shortener=shortener)
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
@@ -71,8 +80,7 @@ class ServerTests(unittest.TestCase):
         self.assertIn("잘못된 URL", body)
 
     def test_table_shows_nodes_links_and_strategy_details(self):
-        first_url = "https://example.com/a"
-        second_url = "https://example.com/i"
+        first_url, second_url = DEMO_URLS[:2]
         self.shorten(first_url)
         self.shorten(second_url)
 
@@ -114,6 +122,8 @@ class ServerTests(unittest.TestCase):
         status, _, body = self.request("GET", "/table")
 
         self.assertEqual(status, 200)
+        self.assertIn(f"용량: {SERVER_TABLE_CAPACITY}", body)
+        self.assertEqual(body.count("<li><strong>칸 "), SERVER_TABLE_CAPACITY)
         for code, url in enumerate(DEMO_URLS):
             self.assertIn(url, body)
             self.assertIn(f'href="/{code}">/{code}</a>', body)
