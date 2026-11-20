@@ -57,8 +57,8 @@ class ServerTests(unittest.TestCase):
         status, _, body = self.shorten(url)
 
         self.assertEqual(status, 200)
-        self.assertIn('href="/0"', body)
-        self.assertIn(f"http://127.0.0.1:{self.port}/0", body)
+        self.assertIn('href="/0">/0</a>', body)
+        self.assertNotIn(f"http://127.0.0.1:{self.port}/0", body)
 
         status, headers, _ = self.request("GET", "/0")
         self.assertEqual(status, 302)
@@ -81,8 +81,8 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn(first_url, body)
         self.assertIn(second_url, body)
-        self.assertIn('href="/0"', body)
-        self.assertIn('href="/1"', body)
+        self.assertIn('href="/0">/0</a>', body)
+        self.assertIn('href="/1">/1</a>', body)
         self.assertIn("<details", body)
         self.assertIn("호너 해시", body)
         if self.shortener.table_strategy == "linear_probing":

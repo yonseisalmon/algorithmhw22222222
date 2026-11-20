@@ -36,13 +36,9 @@ class ShortenerHandler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
-    def _short_link(self, code: str) -> str:
-        host = self.headers.get("Host", f"localhost:{self.server.server_port}")
-        forwarded_scheme = self.headers.get("X-Forwarded-Proto", "http")
-        scheme = forwarded_scheme.split(",", 1)[0].strip().lower()
-        if scheme not in ("http", "https"):
-            scheme = "http"
-        return f"{scheme}://{host}/{code}"
+    @staticmethod
+    def _short_path(code: str) -> str:
+        return f"/{code}"
 
     def _render_hash_details(
         self,
@@ -79,7 +75,7 @@ class ShortenerHandler(BaseHTTPRequestHandler):
             nodes = []
             for url, code in chain:
                 steps, calculated_index = self.shortener.hash_trace(url)
-                short_link = self._short_link(code)
+                short_path = self._short_path(code)
                 probe_slots = (
                     self.shortener.probe_trace(url) if linear_probing else ()
                 )
@@ -91,7 +87,7 @@ class ShortenerHandler(BaseHTTPRequestHandler):
                     f"<p>URL 키: <code>{escape(url)}</code></p>"
                     f"<p>짧은 코드: <code>{escape(code)}</code></p>"
                     f'<p>짧은 링크: <a href="/{escape(code, quote=True)}">'
-                    f"{escape(short_link)}</a></p>{details}</section>"
+                    f"{escape(short_path)}</a></p>{details}</section>"
                 )
             if nodes:
                 if linear_probing:
@@ -180,11 +176,11 @@ class ShortenerHandler(BaseHTTPRequestHandler):
             self._send_page(400, "잘못된 URL", "<p>유효한 HTTP 또는 HTTPS URL을 입력해 주세요.</p>")
             return
 
-        short_link = self._short_link(code)
+        short_path = self._short_path(code)
         content = (
             f"<p>원본 URL: <code>{escape(url)}</code></p>"
             f'<p>짧은 링크: <a href="/{escape(code, quote=True)}">'
-            f"{escape(short_link)}</a></p>"
+            f"{escape(short_path)}</a></p>"
             '<p><a href="/">다른 URL 줄이기</a></p>'
         )
         self._send_page(200, "줄이기 완료", content)
