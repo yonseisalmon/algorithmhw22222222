@@ -11,6 +11,7 @@ from src.server import (
     DEMO_URLS,
     SERVER_TABLE_CAPACITY,
     ShortenerHandler,
+    _make_shortener,
     _seed_demo_data,
 )
 from src.shortener import Shortener
@@ -137,6 +138,19 @@ class ServerTests(unittest.TestCase):
             )
             self.assertEqual(body.count('class="table-node"'), 3)
             self.assertEqual(body.count('<span class="chain-arrow"> → </span>'), 2)
+
+    def test_strategy_shorteners_keep_url_data_separate(self):
+        chaining = _make_shortener("chaining")
+        linear = _make_shortener("linear")
+        url = "https://example.com/only-on-chaining"
+
+        code = chaining.shorten(url)
+
+        self.assertEqual(chaining.table_strategy, "separate_chaining")
+        self.assertEqual(linear.table_strategy, "linear_probing")
+        self.assertEqual(chaining.expand(code), url)
+        with self.assertRaises(KeyError):
+            linear.expand(code)
 
 
 class LinearProbingServerTests(ServerTests):

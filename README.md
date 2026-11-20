@@ -22,7 +22,7 @@
 | `SPEC.md` | 명세 틀. 에이전트가 초안을 쓰고 **본인이 고칩니다** |
 | `src/` · `tests/` · `experiments/` | 비어 있습니다. 수업에서 채웁니다 |
 | `tools/catchup.sh` | 수업 중 놓친 단계를 따라잡는 스크립트 |
-| `Makefile` | `make test` · `make serve` · `make experiment` |
+| `Makefile` | `make test` · `make serve` · `make experiment` · `make compare` |
 
 정답 코드는 들어 있지 않습니다. 에이전트는 작업 공간의 파일을 읽으므로, 정답이
 옆에 있으면 그대로 베껴 와서 연습이 되지 않습니다.
@@ -34,14 +34,18 @@
 | 하고 싶은 것 | 명령 |
 | --- | --- |
 | 테스트 | `make test` |
-| 웹 서버 (포트 8000) | `make serve` |
+| 체이닝 + 선형 탐지 서버 (포트 8000, 8001) | `make serve` |
+| 체이닝만 포트 8000에서 실행 | `make serve STRATEGY=chaining` |
+| 선형 탐지만 포트 8000에서 실행 | `make serve STRATEGY=linear` |
 | 충돌 실험 | `make experiment` |
 | 선형 탐지 비교 및 보고서 | `make compare` |
 | 놓친 단계 따라잡기 | `sh tools/catchup.sh <단계 번호>` |
 
 외부 라이브러리는 쓰지 않습니다. Python 표준 모듈만으로 충분합니다.
 
-선형 탐지 웹 화면은 `make serve STRATEGY=linear`로 실행합니다. `make compare`는
+`make serve`는 포트 8000과 8001에 별도 서버를 띄우며, 두 서버는 서로 독립된
+Shortener와 해시 테이블을 사용합니다. 포트 8000은 개별 체이닝, 8001은 선형 탐지입니다.
+한 방식만 실행하려면 위의 `STRATEGY` 옵션을 사용합니다. `make compare`는
 같은 URL 집합을 사용해 적재율별 탐색 비용을 측정하고 CSV, SVG 그래프, 2쪽 이내
 PDF 보고서를 `experiments/` 아래에 생성합니다.
 

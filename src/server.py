@@ -4,6 +4,7 @@ import argparse
 from functools import partial
 from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from threading import Thread
 from urllib.parse import parse_qs, urlsplit
 
 from src.hash_table import HashTable
@@ -22,6 +23,27 @@ DEMO_URLS = (
 def _seed_demo_data(shortener: Shortener) -> None:
     for url in DEMO_URLS:
         shortener.shorten(url)
+
+
+def _make_shortener(strategy: str) -> Shortener:
+    if strategy == "chaining":
+        table_class = HashTable
+    elif strategy == "linear":
+        table_class = LinearProbingHashTable
+    else:
+        raise ValueError(f"unknown table strategy: {strategy}")
+
+    shortener = Shortener(
+        table_class=partial(table_class, capacity=SERVER_TABLE_CAPACITY)
+    )
+    _seed_demo_data(shortener)
+    return shortener
+
+
+def _make_server(port: int, strategy: str) -> ThreadingHTTPServer:
+    shortener = _make_shortener(strategy)
+    handler = partial(ShortenerHandler, shortener=shortener)
+    return ThreadingHTTPServer(("", port), handler)
 
 
 class ShortenerHandler(BaseHTTPRequestHandler):
@@ -214,29 +236,54 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Run the URL shortener web server.")
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument(
+        "--linear-port",
+        type=int,
+        help="also run a separate linear-probing server on this port",
+    )
+    parser.add_argument(
         "--strategy", choices=("chaining", "linear"), default="chaining"
     )
     args = parser.parse_args()
     if not 1 <= args.port <= 65535:
         parser.error("--port must be between 1 and 65535")
+    if args.linear_port is not None:
+        if not 1 <= args.linear_port <= 65535:
+            parser.error("--linear-port must be between 1 and 65535")
+        if args.port == args.linear_port:
+            parser.error("--port and --linear-port must be different")
+        if args.strategy != "chaining":
+            parser.error("--strategy cannot be combined with --linear-port")
+        configurations = ((args.port, "chaining"), (args.linear_port, "linear"))
+    else:
+        configurations = ((args.port, args.strategy),)
 
-    table_class = (
-        LinearProbingHashTable if args.strategy == "linear" else HashTable
-    )
-    shortener = Shortener(
-        table_class=partial(table_class, capacity=SERVER_TABLE_CAPACITY)
-    )
-    _seed_demo_data(shortener)
-    handler = partial(ShortenerHandler, shortener=shortener)
-    with ThreadingHTTPServer(("", args.port), handler) as server:
-        print(
-            f"Serving {args.strategy} URL shortener on "
-            f"http://0.0.0.0:{args.port}"
-        )
-        try:
-            server.serve_forever()
-        except KeyboardInterrupt:
-            print("\nServer stopped.")
+    servers = []
+    started_servers = []
+    threads = []
+    try:
+        for port, strategy in configurations:
+            servers.append((strategy, _make_server(port, strategy)))
+        for strategy, server in servers:
+            thread = Thread(target=server.serve_forever, daemon=True)
+            thread.start()
+            started_servers.append(server)
+            threads.append(thread)
+            print(
+                f"Serving {strategy} URL shortener on "
+                f"http://0.0.0.0:{server.server_port}",
+                flush=True,
+            )
+        for thread in threads:
+            thread.join()
+    except KeyboardInterrupt:
+        print("\nServers stopped.")
+    finally:
+        for server in started_servers:
+            server.shutdown()
+        for _, server in servers:
+            server.server_close()
+        for thread in threads:
+            thread.join()
 
 
 if __name__ == "__main__":
