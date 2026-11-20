@@ -1,5 +1,6 @@
 """A string-to-string hash table using separate chaining and Horner hashing."""
 
+import math
 from dataclasses import dataclass
 
 
@@ -14,13 +15,19 @@ class _Node:
 class HashTable:
     """Hash table with insertion-ordered chains and automatic growth."""
 
-    def __init__(self, capacity: int = 8) -> None:
+    def __init__(self, capacity: int = 8, max_load: float | None = 0.75) -> None:
         if isinstance(capacity, bool) or not isinstance(capacity, int):
             raise TypeError("capacity must be an integer")
         if capacity <= 0:
             raise ValueError("capacity must be positive")
+        if max_load is not None:
+            if isinstance(max_load, bool) or not isinstance(max_load, (int, float)):
+                raise TypeError("max_load must be a positive number or None")
+            if not math.isfinite(max_load) or max_load <= 0:
+                raise ValueError("max_load must be positive and finite")
 
         self._capacity = capacity
+        self._max_load = max_load
         self._buckets: list[_Node | None] = [None] * capacity
         self._size = 0
         self._next_order = 0
@@ -98,7 +105,10 @@ class HashTable:
             tail.next = new_node
 
         self._size += 1
-        if self._size / self._capacity > 0.75:
+        while (
+            self._max_load is not None
+            and self._size / self._capacity > self._max_load
+        ):
             self._resize(self._capacity * 2)
 
     def remove(self, key: str) -> bool:

@@ -55,6 +55,18 @@ class HashTableTests(unittest.TestCase):
         # All seven keys collide at capacity 8; after growth to 16, four share Q's bucket.
         self.assertEqual(table.lookup("Q"), ("value-Q", 4))
 
+    def test_none_max_load_keeps_capacity_fixed(self):
+        table = HashTable(capacity=8, max_load=None)
+        keys = ["a", "i", "q", "y", "A", "I", "Q"]
+
+        for key in keys:
+            table.set(key, f"value-{key}")
+
+        self.assertEqual(table.capacity, 8)
+        for key in keys:
+            with self.subTest(key=key):
+                self.assertEqual(table.get(key), f"value-{key}")
+
     def test_non_positive_initial_capacity_is_rejected(self):
         for capacity in (0, -1):
             with self.subTest(capacity=capacity):

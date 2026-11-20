@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="560" viewBox="0 0 900 560" role="img">
+<title>적재율별 해시 테이블 탐색 비교 횟수</title>
+<rect width="100%" height="100%" fill="white"/>
+<g font-family="sans-serif" font-size="13" fill="#222">
+<text x="450" y="28" text-anchor="middle" font-size="18">적재율별 평균 노드 비교 수</text>
+<line x1="85" y1="495.00" x2="860" y2="495.00" stroke="#ddd"/>
+<text x="73" y="499.00" text-anchor="end">0</text>
+<line x1="85" y1="416.00" x2="860" y2="416.00" stroke="#ddd"/>
+<text x="73" y="420.00" text-anchor="end">1</text>
+<line x1="85" y1="337.00" x2="860" y2="337.00" stroke="#ddd"/>
+<text x="73" y="341.00" text-anchor="end">2</text>
+<line x1="85" y1="258.00" x2="860" y2="258.00" stroke="#ddd"/>
+<text x="73" y="262.00" text-anchor="end">3</text>
+<line x1="85" y1="179.00" x2="860" y2="179.00" stroke="#ddd"/>
+<text x="73" y="183.00" text-anchor="end">4</text>
+<line x1="85" y1="100.00" x2="860" y2="100.00" stroke="#ddd"/>
+<text x="73" y="104.00" text-anchor="end">5</text>
+<line x1="85.00" y1="100" x2="85.00" y2="495" stroke="#eee"/>
+<text x="85.00" y="517" text-anchor="middle">0</text>
+<line x1="278.75" y1="100" x2="278.75" y2="495" stroke="#eee"/>
+<text x="278.75" y="517" text-anchor="middle">1</text>
+<line x1="472.50" y1="100" x2="472.50" y2="495" stroke="#eee"/>
+<text x="472.50" y="517" text-anchor="middle">2</text>
+<line x1="666.25" y1="100" x2="666.25" y2="495" stroke="#eee"/>
+<text x="666.25" y="517" text-anchor="middle">3</text>
+<line x1="860.00" y1="100" x2="860.00" y2="495" stroke="#eee"/>
+<text x="860.00" y="517" text-anchor="middle">4</text>
+<line x1="85" y1="100" x2="85" y2="495" stroke="#222"/>
+<line x1="85" y1="495" x2="860" y2="495" stroke="#222"/>
+<text x="472.5" y="548" text-anchor="middle">적재율 α</text>
+<text x="18" y="297.5" text-anchor="middle" transform="rotate(-90 18 297.5)">평균 비교 노드 수</text>
+<polyline points="133.43,405.19 181.90,395.28 230.32,386.33 278.75,375.62 327.18,366.06 375.65,356.12 424.07,346.94 472.50,337.20 520.93,328.02 569.40,317.78 617.82,307.59 666.25,298.15 714.68,288.40 763.15,278.42 811.57,268.66 860.00,258.70" fill="none" stroke="#2563eb" stroke-width="2"/>
+<line x1="170" y1="52" x2="198" y2="52" stroke="#2563eb" stroke-width="2"/>
+<text x="206" y="56">성공 탐색 측정</text>
+<polyline points="133.43,406.13 181.90,396.25 230.32,386.37 278.75,376.50 327.18,366.63 375.65,356.75 424.07,346.87 472.50,337.00 520.93,327.13 569.40,317.25 617.82,307.37 666.25,297.50 714.68,287.63 763.15,277.75 811.57,267.87 860.00,258.00" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>
+<line x1="490" y1="52" x2="518" y2="52" stroke="#2563eb" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="526" y="56">성공 탐색 이론</text>
+<polyline points="133.43,474.15 181.90,453.98 230.32,435.97 278.75,416.54 327.18,396.39 375.65,377.07 424.07,356.37 472.50,336.54 520.93,316.54 569.40,296.98 617.82,276.44 666.25,257.63 714.68,237.71 763.15,218.00 811.57,197.62 860.00,178.29" fill="none" stroke="#dc2626" stroke-width="2"/>
+<line x1="170" y1="72" x2="198" y2="72" stroke="#dc2626" stroke-width="2"/>
+<text x="206" y="76">실패 탐색 측정</text>
+<polyline points="133.43,475.25 181.90,455.49 230.32,435.75 278.75,416.00 327.18,396.25 375.65,376.49 424.07,356.75 472.50,337.00 520.93,317.25 569.40,297.49 617.82,277.75 666.25,258.00 714.68,238.25 763.15,218.49 811.57,198.75 860.00,179.00" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="7 5"/>
+<line x1="490" y1="72" x2="518" y2="72" stroke="#dc2626" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="526" y="76">실패 탐색 이론</text>
+</g>
+</svg>
