@@ -222,7 +222,9 @@ def main() -> None:
     measurements = run_experiment()
     output_dir = Path(__file__).resolve().parent
     csv_path = output_dir / "results.csv"
-    svg_path = output_dir / "probe_experiment.svg"
+    svg_dir = output_dir / "svg"
+    svg_dir.mkdir(parents=True, exist_ok=True)
+    svg_path = svg_dir / "probe_experiment.svg"
     write_csv(measurements, csv_path)
     write_svg(measurements, svg_path)
     print(f"Capacity: {CAPACITY}; random seed: {SEED}")
