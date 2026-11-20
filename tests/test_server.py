@@ -5,17 +5,23 @@ from functools import partial
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlencode
 
+from src.hash_table import HashTable
+from src.linear_probing import LinearProbingHashTable
 from src.server import ShortenerHandler
 from src.shortener import Shortener
 
 
 class ServerTests(unittest.TestCase):
+    table_class = HashTable
+
     def setUp(self):
-        handler = partial(ShortenerHandler, shortener=Shortener())
+        shortener = Shortener(table_class=self.table_class)
+        handler = partial(ShortenerHandler, shortener=shortener)
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
         self.port = self.server.server_address[1]
+        self.shortener = shortener
 
     def tearDown(self):
         self.server.shutdown()
@@ -64,7 +70,7 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 400)
         self.assertIn("잘못된 URL", body)
 
-    def test_table_shows_chained_nodes_links_and_hash_details(self):
+    def test_table_shows_nodes_links_and_strategy_details(self):
         first_url = "https://example.com/a"
         second_url = "https://example.com/i"
         self.shorten(first_url)
@@ -77,9 +83,15 @@ class ServerTests(unittest.TestCase):
         self.assertIn(second_url, body)
         self.assertIn('href="/0"', body)
         self.assertIn('href="/1"', body)
-        self.assertIn("→", body)
         self.assertIn("<details", body)
         self.assertIn("호너 해시", body)
+        if self.shortener.table_strategy == "linear_probing":
+            self.assertIn("선형 탐사 경로", body)
+            self.assertIn("충돌 처리: 선형 탐지", body)
+            self.assertIn("→", body)
+        else:
+            self.assertIn("충돌 처리: 개별 체이닝", body)
+            self.assertIn("→", body)
 
     def test_table_escapes_url_content(self):
         url = "https://example.com/<script>"
@@ -91,6 +103,10 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("&lt;script&gt;", body)
         self.assertNotIn("<script>", body)
+
+
+class LinearProbingServerTests(ServerTests):
+    table_class = LinearProbingHashTable
 
 
 if __name__ == "__main__":

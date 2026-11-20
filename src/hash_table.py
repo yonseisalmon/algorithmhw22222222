@@ -4,6 +4,22 @@ import math
 from dataclasses import dataclass
 
 
+def _horner_hash_trace(key: str, capacity: int) -> tuple[tuple[int, ...], int]:
+    value = 0
+    steps = []
+    for character in key:
+        value = (value * 31 + ord(character)) % capacity
+        steps.append(value)
+    return tuple(steps), value
+
+
+def _horner_hash(key: str, capacity: int) -> int:
+    value = 0
+    for character in key:
+        value = (value * 31 + ord(character)) % capacity
+    return value
+
+
 @dataclass(slots=True)
 class _Node:
     key: str
@@ -14,6 +30,8 @@ class _Node:
 
 class HashTable:
     """Hash table with insertion-ordered chains and automatic growth."""
+
+    strategy = "separate_chaining"
 
     def __init__(self, capacity: int = 8, max_load: float | None = 0.75) -> None:
         if isinstance(capacity, bool) or not isinstance(capacity, int):
@@ -45,20 +63,17 @@ class HashTable:
             raise TypeError("key must be a string")
 
     def _hash_index(self, key: str) -> int:
-        value = 0
-        for character in key:
-            value = (value * 31 + ord(character)) % self._capacity
-        return value
+        return _horner_hash(key, self._capacity)
 
     def hash_trace(self, key: str) -> tuple[tuple[int, ...], int]:
         """Return Horner residues for each character and the final bucket index."""
         self._validate_key(key)
-        value = 0
-        steps = []
-        for character in key:
-            value = (value * 31 + ord(character)) % self._capacity
-            steps.append(value)
-        return tuple(steps), value
+        return _horner_hash_trace(key, self._capacity)
+
+    def probe_trace(self, key: str) -> tuple[int, ...]:
+        """Return the single bucket inspected by a chained lookup."""
+        self._validate_key(key)
+        return (self._hash_index(key),)
 
     def _find(self, key: str) -> tuple[_Node | None, int]:
         node = self._buckets[self._hash_index(key)]

@@ -1,15 +1,36 @@
 """URL shortener backed by the project's custom hash table."""
 
+from collections.abc import Callable
+from typing import Protocol
 from urllib.parse import urlsplit
 
 from src.base62 import decode, encode
 from src.hash_table import HashTable
 
 
+class _HashTable(Protocol):
+    strategy: str
+
+    @property
+    def capacity(self) -> int: ...
+
+    def set(self, key: str, value: str) -> None: ...
+
+    def get(self, key: str) -> str | None: ...
+
+    def inspect(self) -> tuple[tuple[tuple[str, str], ...], ...]: ...
+
+    def hash_trace(self, key: str) -> tuple[tuple[int, ...], int]: ...
+
+    def probe_trace(self, key: str) -> tuple[int, ...]: ...
+
+
 class Shortener:
     """Map validated HTTP(S) URLs to stable, sequential base62 codes."""
 
-    def __init__(self, table_class: type[HashTable] = HashTable) -> None:
+    def __init__(
+        self, table_class: Callable[[], _HashTable] = HashTable
+    ) -> None:
         self._url_to_code = table_class()
         self._code_to_url = table_class()
         self._next_id = 0
@@ -63,10 +84,19 @@ class Shortener:
         """Return the URL-to-code table's current capacity."""
         return self._url_to_code.capacity
 
+    @property
+    def table_strategy(self) -> str:
+        """Return the collision strategy used by the URL-to-code table."""
+        return self._url_to_code.strategy
+
     def inspect_table(self) -> tuple[tuple[tuple[str, str], ...], ...]:
-        """Return an immutable snapshot of URL-to-code bucket chains."""
+        """Return an immutable snapshot of URL-to-code buckets or slots."""
         return self._url_to_code.inspect()
 
     def hash_trace(self, url: str) -> tuple[tuple[int, ...], int]:
-        """Return Horner residues and the bucket index for a URL key."""
+        """Return Horner residues and the starting bucket or slot for a URL."""
         return self._url_to_code.hash_trace(url)
+
+    def probe_trace(self, url: str) -> tuple[int, ...]:
+        """Return the buckets or slots inspected while finding a URL."""
+        return self._url_to_code.probe_trace(url)

@@ -6,6 +6,8 @@ from html import escape
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlsplit
 
+from src.hash_table import HashTable
+from src.linear_probing import LinearProbingHashTable
 from src.shortener import Shortener
 
 MAX_FORM_BYTES = 1_000_000
@@ -43,7 +45,11 @@ class ShortenerHandler(BaseHTTPRequestHandler):
         return f"{scheme}://{host}/{code}"
 
     def _render_hash_details(
-        self, url: str, steps: tuple[int, ...], bucket_index: int
+        self,
+        url: str,
+        steps: tuple[int, ...],
+        bucket_index: int,
+        probe_slots: tuple[int, ...] = (),
     ) -> str:
         items = []
         previous = 0
@@ -54,21 +60,32 @@ class ShortenerHandler(BaseHTTPRequestHandler):
             )
             items.append(f"<li><code>{escape(calculation)}</code></li>")
             previous = value
+        probe_details = ""
+        if probe_slots:
+            path = " → ".join(str(index) for index in probe_slots)
+            probe_details = f"<p>선형 탐사 경로: <code>{path}</code></p>"
         return (
             "<details><summary>호너 해시 계산 과정 보기</summary>"
-            f"<p>h0 = 0; 버킷 번호 = {bucket_index}</p>"
+            f"<p>h0 = 0; 시작 칸 = {bucket_index}</p>{probe_details}"
             f"<ol>{''.join(items)}</ol></details>"
         )
 
     def _table_page(self) -> str:
         buckets = self.shortener.inspect_table()
         rows = []
+        linear_probing = self.shortener.table_strategy == "linear_probing"
+        strategy_name = "선형 탐지" if linear_probing else "개별 체이닝"
         for bucket_index, chain in enumerate(buckets):
             nodes = []
             for url, code in chain:
                 steps, calculated_index = self.shortener.hash_trace(url)
                 short_link = self._short_link(code)
-                details = self._render_hash_details(url, steps, calculated_index)
+                probe_slots = (
+                    self.shortener.probe_trace(url) if linear_probing else ()
+                )
+                details = self._render_hash_details(
+                    url, steps, calculated_index, probe_slots
+                )
                 nodes.append(
                     '<section class="table-node">'
                     f"<p>URL 키: <code>{escape(url)}</code></p>"
@@ -77,17 +94,21 @@ class ShortenerHandler(BaseHTTPRequestHandler):
                     f"{escape(short_link)}</a></p>{details}</section>"
                 )
             if nodes:
-                chain_html = (
-                    '<div class="chain">'
-                    + '<span class="chain-arrow"> → </span>'.join(nodes)
-                    + "</div>"
-                )
+                if linear_probing:
+                    chain_html = "".join(nodes)
+                else:
+                    chain_html = (
+                        '<div class="chain">'
+                        + '<span class="chain-arrow"> → </span>'.join(nodes)
+                        + "</div>"
+                    )
             else:
                 chain_html = "<p>비어 있음</p>"
             rows.append(
                 f'<li><strong>칸 {bucket_index}</strong>{chain_html}</li>'
             )
         return (
+            f"<p>충돌 처리: {strategy_name}</p>"
             f"<p>용량: {self.shortener.table_capacity}</p>"
             f"<ol>{''.join(rows)}</ol>"
         )
@@ -172,14 +193,23 @@ class ShortenerHandler(BaseHTTPRequestHandler):
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the URL shortener web server.")
     parser.add_argument("--port", type=int, default=8000)
+    parser.add_argument(
+        "--strategy", choices=("chaining", "linear"), default="chaining"
+    )
     args = parser.parse_args()
     if not 1 <= args.port <= 65535:
         parser.error("--port must be between 1 and 65535")
 
-    shortener = Shortener()
+    table_class = (
+        LinearProbingHashTable if args.strategy == "linear" else HashTable
+    )
+    shortener = Shortener(table_class=table_class)
     handler = partial(ShortenerHandler, shortener=shortener)
     with ThreadingHTTPServer(("", args.port), handler) as server:
-        print(f"Serving URL shortener on http://0.0.0.0:{args.port}")
+        print(
+            f"Serving {args.strategy} URL shortener on "
+            f"http://0.0.0.0:{args.port}"
+        )
         try:
             server.serve_forever()
         except KeyboardInterrupt:

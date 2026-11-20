@@ -25,7 +25,7 @@
 
 ## 4. 단축기
 
-- `src/shortener.py`에 `Shortener(table_class=HashTable)`, `shorten(url)`, `expand(code)`를 제공한다. `table_class`는 같은 인터페이스를 가진 해시 테이블 구현을 선택하기 위한 인자다.
+- `src/shortener.py`에 `Shortener(table_class=HashTable)`, `shorten(url)`, `expand(code)`를 제공한다. `table_class`는 같은 인터페이스를 가진 해시 테이블 구현(개별 체이닝 또는 선형 탐지)을 선택하기 위한 인자다.
 - URL→코드와 코드→URL을 각각 해시 테이블에 저장한다. 같은 URL을 다시 단축하면 기존 코드를 반환한다.
 - 새 코드는 0부터 증가하는 정수 ID를 base62로 인코딩해 만든다. 첫 코드는 `"0"`이며, 코드는 해시값으로 만들지 않는다.
 - URL은 앞뒤 공백이 없고 공백 문자가 포함되지 않은 절대 `http` 또는 `https` URL이어야 하며 호스트가 있어야 한다. 입력은 정규화하지 않고 원문 그대로 저장한다. 잘못된 URL은 `ValueError`, 문자열이 아닌 입력은 `TypeError`를 발생시킨다.
@@ -47,3 +47,12 @@
 - 해시 테이블: 빈 테이블 조회·삭제, 같은 버킷에 충돌하는 여러 키, 키 덮어쓰기, 키별 삭제, 용량 증가 및 재해싱 후에도 값 유지, 잘못된 용량·키·값 형식
 - 단축기: 유효한 HTTP/HTTPS URL, URL 중복 등록, 서로 다른 URL의 서로 다른 코드, 첫 코드 `"0"`, 입력 URL 원문 보존, 잘못된 URL, 잘못된 코드, 존재하지 않는 코드
 - 웹 서버: 홈 폼 표시, 유효·잘못된 폼 제출, 단축 URL 리다이렉트, 없는 코드의 404, `/table`의 버킷·해시 근거 표시
+
+## 7. 선형 탐지 비교 확장
+
+- `src/linear_probing.py`에 개별 체이닝과 같은 `set`, `get`, `remove`, `lookup`, `inspect`, `hash_trace` 인터페이스를 제공하는 `LinearProbingHashTable`을 구현한다.
+- 탐사는 호너 해시 결과에서 시작해 용량 끝에서 0번 칸으로 순환한다. 삭제는 tombstone으로 표시해 탐사 경로를 유지하며, 고정 용량 테이블이 가득 찬 상태에서 새 키를 넣으면 `OverflowError`를 발생시킨다.
+- `Shortener(table_class=...)`로 두 테이블 중 하나를 선택한다. `make serve STRATEGY=linear`은 선형 탐지를 사용하며 `/table`에서 시작 칸과 실제 탐사 순서를 보여 준다.
+- 같은 URL 키와 같은 용량을 사용해 적재율 0.1~0.9에서 성공·실패 탐색 비용을 측정한다. 실패 탐색의 선형 탐지 횟수에는 종료를 확인한 빈 칸을 포함한다.
+- 비교 기준은 체이닝 성공 `1 + α/2`, 실패 `α`; 선형 탐지 성공 `0.5 * (1 + 1/(1-α))`, 실패 `0.5 * (1 + 1/(1-α)^2)`이다.
+- `make compare`는 측정 결과 CSV, 두 탐색 유형의 측정·이론 SVG 그래프, 2쪽 이내 PDF 보고서를 생성한다.

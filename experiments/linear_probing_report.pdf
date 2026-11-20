@@ -1,0 +1,222 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 7 0 R >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R /F2 5 0 R >> >> /Contents 8 0 R >>
+endobj
+7 0 obj
+<< /Length 2529 >>
+stream
+BT /F2 20.0 Tf 1 0 0 1 48.0 748.0 Tm (Linear Probing vs Separate Chaining) Tj ET
+BT /F1 11.0 Tf 1 0 0 1 48.0 728.0 Tm (Lookup-cost experiment | 2-page report) Tj ET
+BT /F2 14.0 Tf 1 0 0 1 48.0 690.0 Tm (Question and method) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 670.0 Tm (Both tables store the same deterministic URL keys at each load factor. Capacity is 4093, the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 657.0 Tm (random seed is 2026, and alpha ranges from 0.1 to 0.9. For each point, every stored key is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 644.0 Tm (searched once and an equally sized set of absent URLs is searched once.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 622.0 Tm (A successful cost counts occupied nodes or slots inspected through the matching key. An) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 609.0 Tm (unsuccessful linear-probing cost also includes the terminating empty slot; chaining counts) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 596.0 Tm (the key comparisons in its bucket list.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 574.0 Tm (Separate-chaining references: successful = 1 + alpha/2; unsuccessful = alpha. Linear-probing) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 561.0 Tm (references: successful = 0.5*\(1 + 1/\(1-alpha\)\); unsuccessful = 0.5*\(1 + 1/\(1-alpha\)^2\).) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 548.0 Tm (These are expected-cost estimates under uniform hashing assumptions; linear probing is) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 535.0 Tm (affected by primary clustering.) Tj ET
+BT /F2 14.0 Tf 1 0 0 1 48.0 513.0 Tm (Results and interpretation) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 491.0 Tm (Maximum absolute measured-vs-theory error: chaining hit 0.026, miss 0.028; linear hit 0.521,) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 478.0 Tm (miss 18.421 probes.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 456.0 Tm (At alpha=0.900, unsuccessful linear probing measured 32.15 slots versus theoretical 50.57 \(a) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 443.0 Tm (18.42 lower result\); chaining measured 0.93 versus 0.90. The linear miss cost is still about) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 430.0 Tm (35x chaining. The gap from the estimate reflects this finite deterministic sample and the) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 417.0 Tm (idealized uniform-hashing assumptions.) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 395.0 Tm (The full nine-point measurements are in linear_probing_comparison.csv. The next page plots) Tj ET
+BT /F1 9.5 Tf 1 0 0 1 48.0 382.0 Tm (measured values against their theoretical references.) Tj ET
+BT /F2 9.0 Tf 1 0 0 1 48.0 38.0 Tm (Reproducible command: make compare) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Length 9876 >>
+stream
+BT /F2 17.0 Tf 1 0 0 1 48.0 752.0 Tm (Measured and theoretical lookup costs) Tj ET
+BT /F2 11.0 Tf 1 0 0 1 68.0 696.0 Tm (Successful search) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 547.00 m 548.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 544.0 Tm (0) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 568.20 m 548.00 568.20 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 565.2 Tm (1) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 589.40 m 548.00 589.40 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 586.4 Tm (2) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 610.60 m 548.00 610.60 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 607.6 Tm (4) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 631.80 m 548.00 631.80 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 628.8 Tm (5) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 653.00 m 548.00 653.00 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 650.0 Tm (6) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 68.00 653.00 m 68.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 62.0 533.0 Tm (0.1) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 188.00 653.00 m 188.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 182.0 533.0 Tm (0.3) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 308.00 653.00 m 308.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 302.0 533.0 Tm (0.5) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 428.00 653.00 m 428.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 422.0 533.0 Tm (0.7) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 548.00 653.00 m 548.00 547.00 l S
+BT /F1 7.0 Tf 1 0 0 1 542.0 533.0 Tm (0.9) Tj ET
+0.000 0.000 0.000 RG 0.80 w [] 0 d 68.00 653.00 m 68.00 547.00 l S
+0.000 0.000 0.000 RG 0.80 w [] 0 d 68.00 547.00 m 548.00 547.00 l S
+0.120 0.290 0.800 RG 1.20 w [] 0 d 68.00 674.00 m 86.00 674.00 l S
+BT /F1 7.0 Tf 1 0 0 1 89.0 671.0 Tm (Chain measured) Tj ET
+0.120 0.290 0.800 RG 1.30 w [] 0 d 67.96 565.88 m 128.06 566.76 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 128.06 566.76 m 188.01 567.77 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 188.01 567.77 m 247.97 568.35 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 247.97 568.35 m 308.07 569.30 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 308.07 569.30 m 368.03 570.09 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 368.03 570.09 m 427.99 570.92 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 427.99 570.92 m 487.94 571.78 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 487.94 571.78 m 548.04 572.78 l S
+0.120 0.290 0.800 RG 1.20 w [4 3] 0 d 190.00 674.00 m 208.00 674.00 l S
+BT /F1 7.0 Tf 1 0 0 1 211.0 671.0 Tm (Chain theory) Tj ET
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 67.96 565.55 m 128.06 566.43 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 128.06 566.43 m 188.01 567.32 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 188.01 567.32 m 247.97 568.20 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 247.97 568.20 m 308.07 569.08 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 308.07 569.08 m 368.03 569.97 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 368.03 569.97 m 427.99 570.85 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 427.99 570.85 m 487.94 571.73 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 487.94 571.73 m 548.04 572.62 l S
+0.800 0.120 0.120 RG 1.20 w [] 0 d 312.00 674.00 m 330.00 674.00 l S
+BT /F1 7.0 Tf 1 0 0 1 333.0 671.0 Tm (Linear measured) Tj ET
+0.800 0.120 0.120 RG 1.30 w [] 0 d 67.96 566.18 m 128.06 567.36 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 128.06 567.36 m 188.01 569.05 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 188.01 569.05 m 247.97 570.94 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 247.97 570.94 m 308.07 574.14 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 308.07 574.14 m 368.03 579.11 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 368.03 579.11 m 427.99 586.66 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 427.99 586.66 m 487.94 600.24 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 487.94 600.24 m 548.04 635.02 l S
+0.800 0.120 0.120 RG 1.20 w [4 3] 0 d 434.00 674.00 m 452.00 674.00 l S
+BT /F1 7.0 Tf 1 0 0 1 455.0 671.0 Tm (Linear theory) Tj ET
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 67.96 565.65 m 128.06 566.88 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 128.06 566.88 m 188.01 568.45 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 188.01 568.45 m 247.97 570.55 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 247.97 570.55 m 308.07 573.50 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 308.07 573.50 m 368.03 577.92 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 368.03 577.92 m 427.99 585.28 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 427.99 585.28 m 487.94 599.98 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 487.94 599.98 m 548.04 644.23 l S
+BT /F2 11.0 Tf 1 0 0 1 68.0 471.0 Tm (Unsuccessful search) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 322.00 m 548.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 319.0 Tm (0) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 343.20 m 548.00 343.20 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 340.2 Tm (11) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 364.40 m 548.00 364.40 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 361.4 Tm (22) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 385.60 m 548.00 385.60 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 382.6 Tm (33) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 406.80 m 548.00 406.80 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 403.8 Tm (44) Tj ET
+0.830 0.830 0.830 RG 0.40 w [] 0 d 68.00 428.00 m 548.00 428.00 l S
+BT /F1 7.0 Tf 1 0 0 1 40.0 425.0 Tm (55) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 68.00 428.00 m 68.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 62.0 308.0 Tm (0.1) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 188.00 428.00 m 188.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 182.0 308.0 Tm (0.3) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 308.00 428.00 m 308.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 302.0 308.0 Tm (0.5) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 428.00 428.00 m 428.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 422.0 308.0 Tm (0.7) Tj ET
+0.900 0.900 0.900 RG 0.40 w [] 0 d 548.00 428.00 m 548.00 322.00 l S
+BT /F1 7.0 Tf 1 0 0 1 542.0 308.0 Tm (0.9) Tj ET
+0.000 0.000 0.000 RG 0.80 w [] 0 d 68.00 428.00 m 68.00 322.00 l S
+0.000 0.000 0.000 RG 0.80 w [] 0 d 68.00 322.00 m 548.00 322.00 l S
+0.120 0.290 0.800 RG 1.20 w [] 0 d 68.00 449.00 m 86.00 449.00 l S
+BT /F1 7.0 Tf 1 0 0 1 89.0 446.0 Tm (Chain measured) Tj ET
+0.120 0.290 0.800 RG 1.30 w [] 0 d 67.96 322.17 m 128.06 322.39 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 128.06 322.39 m 188.01 322.55 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 188.01 322.55 m 247.97 322.77 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 247.97 322.77 m 308.07 322.95 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 308.07 322.95 m 368.03 323.19 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 368.03 323.19 m 427.99 323.37 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 427.99 323.37 m 487.94 323.56 l S
+0.120 0.290 0.800 RG 1.30 w [] 0 d 487.94 323.56 m 548.04 323.79 l S
+0.120 0.290 0.800 RG 1.20 w [4 3] 0 d 190.00 449.00 m 208.00 449.00 l S
+BT /F1 7.0 Tf 1 0 0 1 211.0 446.0 Tm (Chain theory) Tj ET
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 67.96 322.19 m 128.06 322.39 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 128.06 322.39 m 188.01 322.58 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 188.01 322.58 m 247.97 322.77 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 247.97 322.77 m 308.07 322.96 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 308.07 322.96 m 368.03 323.16 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 368.03 323.16 m 427.99 323.35 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 427.99 323.35 m 487.94 323.54 l S
+0.120 0.290 0.800 RG 1.30 w [4 3] 0 d 487.94 323.54 m 548.04 323.73 l S
+0.800 0.120 0.120 RG 1.20 w [] 0 d 312.00 449.00 m 330.00 449.00 l S
+BT /F1 7.0 Tf 1 0 0 1 333.0 446.0 Tm (Linear measured) Tj ET
+0.800 0.120 0.120 RG 1.30 w [] 0 d 67.96 324.13 m 128.06 324.48 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 128.06 324.48 m 188.01 324.93 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 188.01 324.93 m 247.97 325.68 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 247.97 325.68 m 308.07 326.95 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 308.07 326.95 m 368.03 329.08 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 368.03 329.08 m 427.99 333.80 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 427.99 333.80 m 487.94 346.92 l S
+0.800 0.120 0.120 RG 1.30 w [] 0 d 487.94 346.92 m 548.04 383.97 l S
+0.800 0.120 0.120 RG 1.20 w [4 3] 0 d 434.00 449.00 m 452.00 449.00 l S
+BT /F1 7.0 Tf 1 0 0 1 455.0 446.0 Tm (Linear theory) Tj ET
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 67.96 324.15 m 128.06 324.47 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 128.06 324.47 m 188.01 324.93 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 188.01 324.93 m 247.97 325.64 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 247.97 325.64 m 308.07 326.82 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 308.07 326.82 m 368.03 328.99 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 368.03 328.99 m 427.99 333.67 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 427.99 333.67 m 487.94 347.03 l S
+0.800 0.120 0.120 RG 1.30 w [4 3] 0 d 487.94 347.03 m 548.04 419.47 l S
+BT /F2 10.0 Tf 1 0 0 1 48.0 260.0 Tm (Selected measured / theoretical values) Tj ET
+BT /F2 7.5 Tf 1 0 0 1 48.0 244.0 Tm (alpha) Tj ET
+BT /F2 7.5 Tf 1 0 0 1 100.0 244.0 Tm (chain hit) Tj ET
+BT /F2 7.5 Tf 1 0 0 1 180.0 244.0 Tm (linear hit) Tj ET
+BT /F2 7.5 Tf 1 0 0 1 282.0 244.0 Tm (chain miss) Tj ET
+BT /F2 7.5 Tf 1 0 0 1 390.0 244.0 Tm (linear miss) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 48.0 228.0 Tm (0.10) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 100.0 228.0 Tm (1.07/1.05) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 180.0 228.0 Tm (1.09/1.06) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 282.0 228.0 Tm (0.09/0.10) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 390.0 228.0 Tm (1.10/1.12) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 48.0 214.0 Tm (0.50) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 100.0 214.0 Tm (1.26/1.25) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 180.0 214.0 Tm (1.54/1.50) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 282.0 214.0 Tm (0.49/0.50) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 390.0 214.0 Tm (2.57/2.50) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 48.0 200.0 Tm (0.90) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 100.0 200.0 Tm (1.46/1.45) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 180.0 200.0 Tm (4.98/5.50) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 282.0 200.0 Tm (0.93/0.90) Tj ET
+BT /F1 7.5 Tf 1 0 0 1 390.0 200.0 Tm (32.15/50.57) Tj ET
+BT /F1 8.0 Tf 1 0 0 1 48.0 176.0 Tm (CSV: experiments/linear_probing_comparison.csv | SVG: experiments/svg/linear_probing_comparison.svg) Tj ET
+endstream
+endobj
+xref
+0 9
+0000000000 65535 f 
+0000000015 00000 n 
+0000000064 00000 n 
+0000000127 00000 n 
+0000000263 00000 n 
+0000000333 00000 n 
+0000000408 00000 n 
+0000000544 00000 n 
+0000003125 00000 n 
+trailer
+<< /Size 9 /Root 1 0 R >>
+startxref
+13053
+%%EOF

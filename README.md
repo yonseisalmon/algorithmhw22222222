@@ -36,9 +36,14 @@
 | 테스트 | `make test` |
 | 웹 서버 (포트 8000) | `make serve` |
 | 충돌 실험 | `make experiment` |
+| 선형 탐지 비교 및 보고서 | `make compare` |
 | 놓친 단계 따라잡기 | `sh tools/catchup.sh <단계 번호>` |
 
 외부 라이브러리는 쓰지 않습니다. Python 표준 모듈만으로 충분합니다.
+
+선형 탐지 웹 화면은 `make serve STRATEGY=linear`로 실행합니다. `make compare`는
+같은 URL 집합을 사용해 적재율별 탐색 비용을 측정하고 CSV, SVG 그래프, 2쪽 이내
+PDF 보고서를 `experiments/` 아래에 생성합니다.
 
 ## 로컬에서 하기
 

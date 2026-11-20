@@ -1,11 +1,15 @@
 import unittest
 
+from src.hash_table import HashTable
+from src.linear_probing import LinearProbingHashTable
 from src.shortener import Shortener
 
 
-class ShortenerTests(unittest.TestCase):
+class _ShortenerContractTests:
+    table_class = HashTable
+
     def setUp(self):
-        self.shortener = Shortener()
+        self.shortener = Shortener(table_class=self.table_class)
 
     def test_first_code_is_zero_and_round_trips_http_url(self):
         url = "http://example.com"
@@ -74,6 +78,14 @@ class ShortenerTests(unittest.TestCase):
     def test_non_string_code_is_rejected(self):
         with self.assertRaises(TypeError):
             self.shortener.expand(1)
+
+
+class ShortenerTests(_ShortenerContractTests, unittest.TestCase):
+    table_class = HashTable
+
+
+class LinearProbingShortenerTests(_ShortenerContractTests, unittest.TestCase):
+    table_class = LinearProbingHashTable
 
 
 if __name__ == "__main__":
