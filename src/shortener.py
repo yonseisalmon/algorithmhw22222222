@@ -57,3 +57,16 @@ class Shortener:
         if url is None:
             raise KeyError(code)
         return url
+
+    @property
+    def table_capacity(self) -> int:
+        """Return the URL-to-code table's current capacity."""
+        return self._url_to_code.capacity
+
+    def inspect_table(self) -> tuple[tuple[tuple[str, str], ...], ...]:
+        """Return an immutable snapshot of URL-to-code bucket chains."""
+        return self._url_to_code.inspect()
+
+    def hash_trace(self, url: str) -> tuple[tuple[int, ...], int]:
+        """Return Horner residues and the bucket index for a URL key."""
+        return self._url_to_code.hash_trace(url)
