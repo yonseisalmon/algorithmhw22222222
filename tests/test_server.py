@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 
 from src.hash_table import HashTable
 from src.linear_probing import LinearProbingHashTable
-from src.server import ShortenerHandler
+from src.server import DEMO_URLS, ShortenerHandler, _seed_demo_data
 from src.shortener import Shortener
 
 
@@ -103,6 +103,30 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn("&lt;script&gt;", body)
         self.assertNotIn("<script>", body)
+
+    def test_demo_urls_make_collisions_visible_for_each_strategy(self):
+        self.assertEqual(
+            [self.shortener.hash_trace(url)[1] for url in DEMO_URLS],
+            [0, 0, 0],
+        )
+        _seed_demo_data(self.shortener)
+
+        status, _, body = self.request("GET", "/table")
+
+        self.assertEqual(status, 200)
+        for code, url in enumerate(DEMO_URLS):
+            self.assertIn(url, body)
+            self.assertIn(f'href="/{code}">/{code}</a>', body)
+        if self.shortener.table_strategy == "linear_probing":
+            self.assertIn("해시 충돌: 시작 칸이 점유되어", body)
+            self.assertIn("선형 탐사 경로: <code>0 → 1 → 2</code>", body)
+        else:
+            self.assertIn(
+                "해시 충돌: 같은 칸의 연결 리스트에 3개 키가 있습니다.",
+                body,
+            )
+            self.assertEqual(body.count('class="table-node"'), 3)
+            self.assertEqual(body.count('<span class="chain-arrow"> → </span>'), 2)
 
 
 class LinearProbingServerTests(ServerTests):

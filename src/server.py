@@ -11,6 +11,16 @@ from src.linear_probing import LinearProbingHashTable
 from src.shortener import Shortener
 
 MAX_FORM_BYTES = 1_000_000
+DEMO_URLS = (
+    "https://example.com/a",
+    "https://example.com/i",
+    "https://example.com/q",
+)
+
+
+def _seed_demo_data(shortener: Shortener) -> None:
+    for url in DEMO_URLS:
+        shortener.shorten(url)
 
 
 class ShortenerHandler(BaseHTTPRequestHandler):
@@ -59,7 +69,14 @@ class ShortenerHandler(BaseHTTPRequestHandler):
         probe_details = ""
         if probe_slots:
             path = " → ".join(str(index) for index in probe_slots)
-            probe_details = f"<p>선형 탐사 경로: <code>{path}</code></p>"
+            collision_note = ""
+            if len(probe_slots) > 1:
+                collision_note = (
+                    "<p>해시 충돌: 시작 칸이 점유되어 다음 칸을 탐사했습니다.</p>"
+                )
+            probe_details = (
+                f"{collision_note}<p>선형 탐사 경로: <code>{path}</code></p>"
+            )
         return (
             "<details><summary>호너 해시 계산 과정 보기</summary>"
             f"<p>h0 = 0; 시작 칸 = {bucket_index}</p>{probe_details}"
@@ -93,8 +110,14 @@ class ShortenerHandler(BaseHTTPRequestHandler):
                 if linear_probing:
                     chain_html = "".join(nodes)
                 else:
+                    collision_note = ""
+                    if len(chain) > 1:
+                        collision_note = (
+                            f"<p>해시 충돌: 같은 칸의 연결 리스트에 "
+                            f"{len(chain)}개 키가 있습니다.</p>"
+                        )
                     chain_html = (
-                        '<div class="chain">'
+                        f'<div class="chain">{collision_note}'
                         + '<span class="chain-arrow"> → </span>'.join(nodes)
                         + "</div>"
                     )
@@ -200,6 +223,7 @@ def main() -> None:
         LinearProbingHashTable if args.strategy == "linear" else HashTable
     )
     shortener = Shortener(table_class=table_class)
+    _seed_demo_data(shortener)
     handler = partial(ShortenerHandler, shortener=shortener)
     with ThreadingHTTPServer(("", args.port), handler) as server:
         print(
