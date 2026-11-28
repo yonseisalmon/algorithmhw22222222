@@ -57,7 +57,11 @@ class ShortenerHandler(BaseHTTPRequestHandler):
         page = (
             '<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             f"<title>{escape(title)}</title></head><body>"
-            '<nav><a href="/">URL 단축</a> | <a href="/table">해시 테이블</a></nav>'
+            '<nav>'
+            '<a href="/">URL 단축</a> | '
+            '<a href="/table">현재 해시 테이블</a> | '
+            f'<a href="{self._peer_table_url()}">다른 충돌 처리 방식</a>'
+            '</nav>'
             f"<main><h1>{escape(title)}</h1>{content}</main></body></html>"
         )
         body = page.encode("utf-8")
@@ -68,6 +72,50 @@ class ShortenerHandler(BaseHTTPRequestHandler):
         self.send_header("X-Content-Type-Options", "nosniff")
         self.end_headers()
         self.wfile.write(body)
+
+    def _peer_table_url(self) -> str:
+        current_port = self.server.server_port
+        peer_port = 8001 if current_port == 8000 else 8000
+        return self._peer_url(peer_port) + "/table"
+
+    def _peer_url(self, port: int) -> str:
+        host = self.headers.get("Host", "localhost")
+        hostname = urlsplit(f"//{host}").hostname or "localhost"
+        if ":" in hostname:
+            hostname = f"[{hostname}]"
+        return f"http://{hostname}:{port}"
+
+    def _strategy_cards(self) -> str:
+        strategy_name = (
+            "선형 탐지"
+            if self.shortener.table_strategy == "linear_probing"
+            else "개별 체이닝"
+        )
+        chaining_url = (
+            "/table"
+            if self.shortener.table_strategy == "separate_chaining"
+            else self._peer_url(8000) + "/table"
+        )
+        linear_url = (
+            "/table"
+            if self.shortener.table_strategy == "linear_probing"
+            else self._peer_url(8001) + "/table"
+        )
+        return (
+            "<section><h2>충돌 처리 방식</h2>"
+            "<p>현재 서버 방식: "
+            f"<strong>{escape(strategy_name)}</strong></p>"
+            '<article><h3>개별 체이닝</h3>'
+            '<p>충돌한 항목을 같은 버킷의 연결 리스트에 저장합니다.</p>'
+            f'<p><a href="{escape(chaining_url, quote=True)}">'
+            '개별 체이닝 테이블 보기</a></p>'
+            "</article>"
+            '<article><h3>선형 탐지</h3>'
+            '<p>충돌하면 다음 칸을 순서대로 탐사하여 항목을 저장합니다.</p>'
+            f'<p><a href="{escape(linear_url, quote=True)}">'
+            '선형 탐지 테이블 보기</a></p>'
+            "</article></section>"
+        )
 
     @staticmethod
     def _short_path(code: str) -> str:
@@ -165,7 +213,8 @@ class ShortenerHandler(BaseHTTPRequestHandler):
                 '<label for="url">원본 URL</label> '
                 '<input id="url" name="url" type="url" required '
                 'placeholder="https://example.com/"> '
-                '<button type="submit">줄이기</button></form>',
+                '<button type="submit">줄이기</button></form>'
+                + self._strategy_cards(),
             )
             return
 

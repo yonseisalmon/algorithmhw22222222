@@ -61,6 +61,8 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn('name="url"', body)
         self.assertIn('action="/shorten"', body)
+        self.assertIn("개별 체이닝", body)
+        self.assertIn("선형 탐지", body)
 
     def test_shortening_shows_short_link_and_code_redirects(self):
         url = "https://example.com/a?b=1"
