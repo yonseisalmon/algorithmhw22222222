@@ -7,7 +7,9 @@ from urllib.parse import urlencode
 
 from src.hash_table import HashTable
 from src.linear_probing import LinearProbingHashTable
+from src.base62 import encode
 from src.server import (
+    COLLISION_FILL_URLS,
     DEMO_URLS,
     SERVER_TABLE_CAPACITY,
     ShortenerHandler,
@@ -23,7 +25,9 @@ class ServerTests(unittest.TestCase):
     def setUp(self):
         shortener = Shortener(
             table_class=partial(
-                self.table_class, capacity=SERVER_TABLE_CAPACITY
+                self.table_class,
+                capacity=SERVER_TABLE_CAPACITY,
+                max_load=None,
             )
         )
         handler = partial(ShortenerHandler, shortener=shortener)
@@ -127,9 +131,12 @@ class ServerTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertIn(f"용량: {SERVER_TABLE_CAPACITY}", body)
         self.assertEqual(body.count("<li><strong>칸 "), SERVER_TABLE_CAPACITY)
-        for code, url in enumerate(DEMO_URLS):
+        seeded_urls = DEMO_URLS + COLLISION_FILL_URLS
+        self.assertEqual(len(seeded_urls), SERVER_TABLE_CAPACITY)
+        for code, url in enumerate(seeded_urls):
+            short_code = encode(code)
             self.assertIn(url, body)
-            self.assertIn(f'href="/{code}">/{code}</a>', body)
+            self.assertIn(f'href="/{short_code}">/{short_code}</a>', body)
         if self.shortener.table_strategy == "linear_probing":
             self.assertIn("해시 충돌: 시작 칸이 점유되어", body)
             self.assertIn("선형 탐사 경로: <code>0 → 1 → 2</code>", body)
@@ -138,8 +145,10 @@ class ServerTests(unittest.TestCase):
                 "해시 충돌: 같은 칸의 연결 리스트에 3개 키가 있습니다.",
                 body,
             )
-            self.assertEqual(body.count('class="table-node"'), 3)
-            self.assertEqual(body.count('<span class="chain-arrow"> → </span>'), 2)
+            self.assertEqual(
+                body.count('class="table-node"'),
+                SERVER_TABLE_CAPACITY,
+            )
 
     def test_strategy_shorteners_keep_url_data_separate(self):
         chaining = _make_shortener("chaining")

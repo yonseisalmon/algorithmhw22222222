@@ -18,10 +18,14 @@ DEMO_URLS = (
     "https://example.com/demo-kb",
     "https://example.com/demo-md",
 )
+COLLISION_FILL_URLS = tuple(
+    f"https://example.com/collision-fill-{index:02d}"
+    for index in range(SERVER_TABLE_CAPACITY - len(DEMO_URLS))
+)
 
 
 def _seed_demo_data(shortener: Shortener) -> None:
-    for url in DEMO_URLS:
+    for url in DEMO_URLS + COLLISION_FILL_URLS:
         shortener.shorten(url)
 
 
@@ -34,7 +38,11 @@ def _make_shortener(strategy: str) -> Shortener:
         raise ValueError(f"unknown table strategy: {strategy}")
 
     shortener = Shortener(
-        table_class=partial(table_class, capacity=SERVER_TABLE_CAPACITY)
+        table_class=partial(
+            table_class,
+            capacity=SERVER_TABLE_CAPACITY,
+            max_load=None,
+        )
     )
     _seed_demo_data(shortener)
     return shortener
